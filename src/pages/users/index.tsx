@@ -1,3 +1,5 @@
+import { useQuery } from 'react-query'
+import Link from "next/link";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 
 import {
@@ -7,6 +9,7 @@ import {
   Flex,
   Heading,
   Icon,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -21,9 +24,34 @@ import {
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
-import Link from "next/link";
+import { User } from '../../services/mirage'
+import { api } from "../../services/api";
+
+type UserResponse = {
+  users: User[]
+}
 
 export default function UserList() {
+  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
+    const response = await api.get<UserResponse>('/users')
+
+    const users = response.data.users.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      created_at: new Date(user.created_at).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }));
+
+
+    return users
+  }, {
+    staleTime: 1000 * 5 // 5 seconds
+  })
+
   const isWideScreen = useBreakpointValue({
     base: false,
     lg: true
@@ -40,6 +68,7 @@ export default function UserList() {
           <Flex flexDir={['column', 'row']} mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal" mb={['4', '0']}>
               Usuários
+              { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" /> }
             </Heading>
 
             <Link href="/users/create" passHref>
@@ -55,106 +84,64 @@ export default function UserList() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th px={['4', '4','6']} color="gray.300" w="8">
-                  <Checkbox colorScheme="pink" />
-                </Th>
-                <Th>Usuário</Th>
-                {isWideScreen && <Th>Data de cadastro</Th>}
-                {isWideScreen && <Th w={['4', '4','8']} />}
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td px={['4', '4','6']} color="gray.300" w="8">
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Lucas Alves</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      lucas.alves@teste.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideScreen && <Td>01 de Abril, 2021</Td>}
-                {isWideScreen && (
-                  <Td>
-                    <Tooltip hasArrow label="Editar" fontSize="md">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="whiteAlpha"
-                      >
-                        <Icon as={RiPencilLine} fontSize={['13', '16']} />
-                      </Button>
-                    </Tooltip>
-                  </Td>
-                )}
-              </Tr>
-              <Tr>
-                <Td px={['4', '4','6']} color="gray.300" w="8">
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Lucas Alves</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      lucas.alves@teste.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideScreen && <Td>01 de Abril, 2021</Td>}
-                {isWideScreen && (
-                  <Td>
-                    <Tooltip hasArrow label="Editar" fontSize="md">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="whiteAlpha"
-                      >
-                        <Icon as={RiPencilLine} fontSize={['13', '16']} />
-                      </Button>
-                    </Tooltip>
-                  </Td>
-                )}
-              </Tr>
-              <Tr>
-                <Td px={['4', '4','6']} color="gray.300" w="8">
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Lucas Alves</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      lucas.alves@teste.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideScreen && <Td>01 de Abril, 2021</Td>}
-                {isWideScreen && (
-                  <Td>
-                    <Tooltip hasArrow label="Editar" fontSize="md">
-                      <Button
-                        as="a"
-                        size="sm"
-                        fontSize="sm"
-                        colorScheme="whiteAlpha"
-                      >
-                        <Icon as={RiPencilLine} fontSize={['13', '16']} />
-                      </Button>
-                    </Tooltip>
-                  </Td>
-                )}
-              </Tr>
-            </Tbody>
-          </Table>
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner />
+            </Flex>
+          ) : error ? (
+            <Flex justify="center">
+              <Text>Falha ao carregar os usuários</Text>
+            </Flex>
+          ) : (
+            <>
+              <Table colorScheme="whiteAlpha">
+                <Thead>
+                  <Tr>
+                    <Th px={['4', '4','6']} color="gray.300" w="8">
+                      <Checkbox colorScheme="pink" />
+                    </Th>
+                    <Th>Usuário</Th>
+                    {isWideScreen && <Th>Data de cadastro</Th>}
+                    {isWideScreen && <Th w={['4', '4','8']} />}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data.map(user => (
+                    <Tr key={user.id}>
+                      <Td px={['4', '4','6']} color="gray.300" w="8">
+                        <Checkbox colorScheme="pink" />
+                      </Td>
+                      <Td>
+                        <Box>
+                          <Text fontWeight="bold">{user.name}</Text>
+                          <Text fontSize="sm" color="gray.300">
+                            {user.email}
+                          </Text>
+                        </Box>
+                      </Td>
+                      {isWideScreen && <Td>{user.created_at}</Td>}
+                      {isWideScreen && (
+                        <Td>
+                          <Tooltip hasArrow label="Editar" fontSize="md">
+                            <Button
+                              as="a"
+                              size="sm"
+                              fontSize="sm"
+                              colorScheme="whiteAlpha"
+                            >
+                              <Icon as={RiPencilLine} fontSize={['13', '16']} />
+                            </Button>
+                          </Tooltip>
+                        </Td>
+                      )}
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
 
-          <Pagination />
+              <Pagination />
+            </>
+          )}
         </Box>
       </Flex>
     </Box>
