@@ -26,40 +26,31 @@ import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 import { User } from '../../services/mirage'
 import { api } from "../../services/api";
-import { useEffect, useState } from 'react';
 
 type UserResponse = {
   users: User[]
 }
 
 export default function UserList() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState([])
+  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
+    const response = await api.get<UserResponse>('/users')
 
-  useEffect(() => {
-    async function getUsers() {
-      setIsLoading(true)
-
-      const response = await api.get<UserResponse>('/users')
-
-      const users = response.data.users.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        created_at: new Date(user.created_at).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        })
-      }));
+    const users = response.data.users.map(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      created_at: new Date(user.created_at).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }));
 
 
-      setData(users)
-      setIsLoading(false)
-    }
-
-    getUsers()
-  }, [])
+    return users
+  }, {
+    staleTime: 1000 * 10 // 10 seconds
+  })
 
   const isWideScreen = useBreakpointValue({
     base: false,
@@ -77,7 +68,7 @@ export default function UserList() {
           <Flex flexDir={['column', 'row']} mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal" mb={['4', '0']}>
               Usuários
-              {/* { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" /> } */}
+              { !isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" /> }
             </Heading>
 
             <Link href="/users/create" passHref>
@@ -97,11 +88,11 @@ export default function UserList() {
             <Flex justify="center">
               <Spinner />
             </Flex>
-          ) /* : error ? (
+          ) : error ? (
             <Flex justify="center">
               <Text>Falha ao carregar os usuários</Text>
             </Flex>
-          )*/ : (
+          ) : (
             <>
               <Table colorScheme="whiteAlpha">
                 <Thead>

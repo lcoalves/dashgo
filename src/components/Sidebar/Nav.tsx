@@ -16,6 +16,7 @@ export function Nav() {
       <Section title="GERAL">
         <Link href="/dashboard" icon={RiDashboardLine}>Dashboard</Link>
         <Link href="/users" icon={RiContactsLine}>Usuários</Link>
+        <Link href="/cache-users" icon={RiContactsLine}>Usuários com cache</Link>
       </Section>
 
       <Section title="AUTOMAÇÃO">

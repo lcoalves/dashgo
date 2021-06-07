@@ -44,7 +44,7 @@ export function Header() {
 
       {isWideScreen && <Search />}
 
-      <Flex align="center" ml="auto">
+      <Flex align="center" ml="auto">         
         <Notifications />
 
         <Profile showProfileData={isWideScreen} />
