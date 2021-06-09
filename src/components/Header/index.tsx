@@ -7,6 +7,7 @@ import { Notifications } from './Notifications';
 import { Search } from './Search';
 import { Logo } from './Logo';
 import { RiMenuLine } from 'react-icons/ri';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const { onOpen } = useSidebarDrawer();
@@ -48,6 +49,8 @@ export function Header() {
         <Notifications />
 
         <Profile showProfileData={isWideScreen} />
+
+        <ThemeToggle />
       </Flex>
     </Flex>
   )

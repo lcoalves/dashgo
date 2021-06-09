@@ -68,7 +68,6 @@ export default function CreateUser() {
           as="form"
           flex="1"
           borderRadius="8px"
-          bg="gray.800"
           p={["6", "8"]}
           onSubmit={handleSubmit(handleCreateUser)}
         >
@@ -76,7 +75,7 @@ export default function CreateUser() {
             Criar usuário
           </Heading>
 
-          <Divider my="6" borderColor="gray.700" />
+          <Divider my="6" />
 
           <VStack spacing="8">
             <SimpleGrid minChildWidth="240px" spacing={["6", "8"]} w="100%">
@@ -116,12 +115,12 @@ export default function CreateUser() {
           <Flex mt="8" justify="flex-end">
             <HStack spacing="4">
               <Link href="/users" passHref>
-                <Button as="a" colorScheme="whiteAlpha">
+                <Button as="a" colorScheme="pink">
                   Cancelar
                 </Button>
               </Link>
               <Button
-                colorScheme="pink"
+                colorScheme="green"
                 type="submit"
                 isLoading={isSubmitting}
               >

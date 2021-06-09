@@ -15,9 +15,7 @@ export function Search() {
       ml="6"
       maxW="400px"
       alignSelf="center"
-      color="gray.200"
       position="relative"
-      bg="gray.800"
       borderRadius="full"
     >
       <Input

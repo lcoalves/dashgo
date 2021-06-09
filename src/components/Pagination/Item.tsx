@@ -1,11 +1,15 @@
 import { Button } from '@chakra-ui/react';
 
+import { useColorMode } from "@chakra-ui/color-mode";
+
 interface ItemProps {
   page: number | string;
   isCurrent?: boolean;
 }
 
 export function Item({ page, isCurrent = false }: ItemProps) {
+  const { colorMode } = useColorMode();
+
   if (isCurrent) {
     return (
       <Button
@@ -29,9 +33,9 @@ export function Item({ page, isCurrent = false }: ItemProps) {
       size="sm"
       fontSize="xs"
       w="4"
-      bg="gray.700"
+      bg={colorMode === 'light' ? 'gray.100' : 'gray.700'}
       _hover={{
-        bg: 'gray.500'
+        bg: colorMode === 'light' ? 'gray.300' : 'gray.500'
       }}
     >
       {page}

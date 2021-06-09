@@ -73,7 +73,7 @@ export default function UserList() {
       <Flex w="100%" my="6" maxW="1480px" mx="auto" px="6">
         <Sidebar />
 
-        <Box flex="1" borderRadius="8px" bg="gray.800" p="8">
+        <Box flex="1" borderRadius="8px" p="8">
           <Flex flexDir={['column', 'row']} mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal" mb={['4', '0']}>
               Usuários
@@ -106,7 +106,7 @@ export default function UserList() {
               <Table colorScheme="whiteAlpha">
                 <Thead>
                   <Tr>
-                    <Th px={['4', '4','6']} color="gray.300" w="8">
+                    <Th px={['4', '4','6']} w="8">
                       <Checkbox colorScheme="pink" />
                     </Th>
                     <Th>Usuário</Th>
@@ -117,13 +117,13 @@ export default function UserList() {
                 <Tbody>
                   {data.map(user => (
                     <Tr key={user.id}>
-                      <Td px={['4', '4','6']} color="gray.300" w="8">
+                      <Td px={['4', '4','6']} w="8">
                         <Checkbox colorScheme="pink" />
                       </Td>
                       <Td>
                         <Box>
                           <Text fontWeight="bold">{user.name}</Text>
-                          <Text fontSize="sm" color="gray.300">
+                          <Text fontSize="sm">
                             {user.email}
                           </Text>
                         </Box>
@@ -136,7 +136,7 @@ export default function UserList() {
                               as="a"
                               size="sm"
                               fontSize="sm"
-                              colorScheme="whiteAlpha"
+                              colorScheme="green"
                             >
                               <Icon as={RiPencilLine} fontSize={['13', '16']} />
                             </Button>
