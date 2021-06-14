@@ -1,4 +1,3 @@
-import { useQuery } from 'react-query'
 import Link from "next/link";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
 
@@ -24,37 +23,14 @@ import {
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
-import { User } from '../../services/mirage'
-import { api } from "../../services/api";
-
-type UserResponse = {
-  users: User[]
-}
+import { useUsers } from "../../services/hooks/useUsers";
 
 export default function UserList() {
-  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
-    const response = await api.get<UserResponse>('/users')
-
-    const users = response.data.users.map(user => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created_at: new Date(user.created_at).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      })
-    }));
-
-
-    return users
-  }, {
-    staleTime: 1000 * 10 // 10 seconds
-  })
+  const { data, isLoading, isFetching, error } = useUsers();
 
   const isWideScreen = useBreakpointValue({
     base: false,
-    lg: true
+    lg: true,
   });
 
   return (
@@ -65,10 +41,15 @@ export default function UserList() {
         <Sidebar />
 
         <Box flex="1" borderRadius="8px" p="8">
-          <Flex flexDir={['column', 'row']} mb="8" justify="space-between" align="center">
-            <Heading size="lg" fontWeight="normal" mb={['4', '0']}>
+          <Flex
+            flexDir={["column", "row"]}
+            mb="8"
+            justify="space-between"
+            align="center"
+          >
+            <Heading size="lg" fontWeight="normal" mb={["4", "0"]}>
               Usuários
-              { !isLoading && isFetching && <Spinner size="sm" ml="4" /> }
+              {!isLoading && isFetching && <Spinner size="sm" ml="4" />}
             </Heading>
 
             <Link href="/users/create" passHref>
@@ -97,26 +78,24 @@ export default function UserList() {
               <Table colorScheme="whiteAlpha">
                 <Thead>
                   <Tr>
-                    <Th px={['4', '4','6']} w="8">
+                    <Th px={["4", "4", "6"]} w="8">
                       <Checkbox colorScheme="pink" />
                     </Th>
                     <Th>Usuário</Th>
                     {isWideScreen && <Th>Data de cadastro</Th>}
-                    {isWideScreen && <Th w={['4', '4','8']} />}
+                    {isWideScreen && <Th w={["4", "4", "8"]} />}
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data.map(user => (
+                  {data.map((user) => (
                     <Tr key={user.id}>
-                      <Td px={['4', '4','6']} w="8">
+                      <Td px={["4", "4", "6"]} w="8">
                         <Checkbox colorScheme="pink" />
                       </Td>
                       <Td>
                         <Box>
                           <Text fontWeight="bold">{user.name}</Text>
-                          <Text fontSize="sm">
-                            {user.email}
-                          </Text>
+                          <Text fontSize="sm">{user.email}</Text>
                         </Box>
                       </Td>
                       {isWideScreen && <Td>{user.created_at}</Td>}
@@ -129,7 +108,7 @@ export default function UserList() {
                               fontSize="sm"
                               colorScheme="green"
                             >
-                              <Icon as={RiPencilLine} fontSize={['13', '16']} />
+                              <Icon as={RiPencilLine} fontSize={["13", "16"]} />
                             </Button>
                           </Tooltip>
                         </Td>
