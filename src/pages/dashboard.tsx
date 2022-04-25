@@ -2,6 +2,8 @@ import dynamic from 'next/dynamic';
 
 import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
 
+import { Heading } from "@delaunay-ui/react";
+
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
 
@@ -65,6 +67,8 @@ export default function Dashboard() {
   return (
     <Flex direction="column" h="100vh">
       <Header />
+
+      <Heading size='120' weight='regular'>Olá, sou um Heading</Heading>
 
       <Flex w="100%" my="6" maxW="1480px" mx="auto" px="6">
         <Sidebar />

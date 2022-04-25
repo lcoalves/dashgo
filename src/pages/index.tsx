@@ -48,7 +48,7 @@ export default function SignIn() {
         flexDir="column"
         onSubmit={handleSubmit(handleSignIn)}
       >
-        <Stack space="4">
+        <Stack as="header" space="4">
           <Input
             name="email"
             label="E-mail"
